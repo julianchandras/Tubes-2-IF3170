@@ -36,7 +36,7 @@ class ID3DecisionTree:
         self.n_classes = None
         self.feature_types = None
         self.feature_names = None
-        self._lock = threading.Lock()
+        # self._lock = threading.Lock()
 
     def fit(self, X: np.ndarray, y: np.ndarray, 
             feature_types: Optional[List[str]] = None,
