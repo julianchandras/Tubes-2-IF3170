@@ -16,7 +16,8 @@ $ .\venv\Scripts\Activate
 ```
 $ pip install -r requirements.txt
 ```
-### 4. Add New Requirements
+
+### 4. Adding requirements
 ```
 $ pip freeze > requirements.txt
 ```
