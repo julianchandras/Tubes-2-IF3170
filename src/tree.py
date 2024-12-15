@@ -33,25 +33,26 @@ class Node():
                     self.left.make_split(max_depth, min_samples_split)
                     self.right.make_split(max_depth, min_samples_split)
 
-    def _calculate_split_gini(self, feature_index, threshold):
+    def _calculate_information_gain(self, feature_index, threshold):
         left_mask = self.X[:, feature_index] < threshold
         right_mask = ~left_mask
 
-        left_impurity = self._calculate_gini_index(self.y[left_mask])
-        right_impurity = self._calculate_gini_index(self.y[right_mask])
+        left_entropy = self._calculate_entropy(self.y[left_mask])
+        right_entropy = self._calculate_entropy(self.y[right_mask])
 
         n_left = np.sum(left_mask)
         n_right = self.y.shape[0] - n_left
 
-        return (n_left / len(self.y)) * left_impurity + (n_right / len(self.y)) * right_impurity
+        weighted_entropy = (n_left / len(self.y)) * left_entropy + (n_right / len(self.y)) * right_entropy
+        return self._calculate_entropy(self.y) - weighted_entropy
 
-    def _calculate_gini_index(self, y):
+    def _calculate_entropy(self, y):
         _, class_counts = np.unique(y, return_counts=True)
         probabilities = class_counts / len(y)
-        return 1 - np.sum(probabilities ** 2)
+        return -np.sum(probabilities * np.log2(probabilities))
     
     def _find_best_split(self):
-        largest_gini_gain = 0
+        largest_info_gain = 0
         best_feature_index = None
         best_threshold = None
 
@@ -61,11 +62,11 @@ class Node():
             thresholds = (sorted_values[:-1] + sorted_values[1:]) / 2
 
             for threshold in thresholds:
-                gini_gain = self._calculate_gini_index(self.y) - self._calculate_split_gini(feature_index, threshold)
-                if gini_gain > largest_gini_gain:
+                info_gain = self._calculate_information_gain(feature_index, threshold)
+                if info_gain > largest_info_gain:
                     best_feature_index = feature_index
                     best_threshold = threshold
-                    largest_gini_gain = gini_gain
+                    largest_info_gain = info_gain
 
         return best_feature_index, best_threshold
 
