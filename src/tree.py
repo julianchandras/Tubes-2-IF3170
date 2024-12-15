@@ -27,8 +27,8 @@ class Node():
                 right_mask = ~left_mask
 
                 if np.sum(left_mask) > 0 and np.sum(right_mask) > 0:
-                    self.left = Node(self.X[left_mask], self.y[left_mask], depth=self.depth+1)
-                    self.right = Node(self.X[right_mask], self.y[right_mask], depth=self.depth+1)
+                    self.left = Node(self.X[left_mask], self.y[left_mask], depth=self.depth+1, max_features=self.max_features)
+                    self.right = Node(self.X[right_mask], self.y[right_mask], depth=self.depth+1, max_features=self.max_features)
 
                     self.left.make_split(max_depth, min_samples_split)
                     self.right.make_split(max_depth, min_samples_split)
